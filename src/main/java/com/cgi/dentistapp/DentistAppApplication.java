@@ -9,7 +9,7 @@ import java.util.Locale;
 public class DentistAppApplication {
 
     public static void main(String[] args) {
-
         SpringApplication.run(DentistAppApplication.class, args);
     }
+
 }

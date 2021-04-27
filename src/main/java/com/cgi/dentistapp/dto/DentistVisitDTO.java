@@ -4,9 +4,10 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.validation.constraints.Size;
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 @Getter
@@ -17,12 +18,14 @@ public class DentistVisitDTO {
 
     Long id;
 
-    @Size(min = 1, max = 50)
+    @NotNull
     String dentistName;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @NotNull
     Date visitDate;
 
+    @NotEmpty
     String visitTime;
 
 }

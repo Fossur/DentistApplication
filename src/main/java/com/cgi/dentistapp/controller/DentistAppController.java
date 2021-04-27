@@ -2,26 +2,26 @@ package com.cgi.dentistapp.controller;
 
 import com.cgi.dentistapp.dto.DentistDTO;
 import com.cgi.dentistapp.dto.DentistVisitDTO;
-import com.cgi.dentistapp.entity.DentistEntity;
-import com.cgi.dentistapp.entity.DentistVisitEntity;
 import com.cgi.dentistapp.service.DentistVisitService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
-import java.text.SimpleDateFormat;
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.Date;
-
-import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Controller
 @EnableAutoConfiguration
@@ -32,13 +32,18 @@ public class DentistAppController extends WebMvcConfigurerAdapter {
 
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
-        registry.addViewController("/results").setViewName("results");
-
+        registry.addViewController("/registered").setViewName("registered");
+        registry.addViewController("/updated").setViewName("updated");
+        registry.addViewController("/main").setViewName("main");
+        registry.addViewController("/details").setViewName("details");
+        registry.addViewController("/visit").setViewName("visit");
+        registry.addViewController("/dentist").setViewName("dentist");
+        registry.addViewController("/search").setViewName("search");
     }
 
     @GetMapping
-    public String showMenu() {
-        return "menu";
+    public String showMain() {
+        return "main";
     }
 
     @ModelAttribute("dentists")
@@ -61,12 +66,9 @@ public class DentistAppController extends WebMvcConfigurerAdapter {
         Optional<DentistDTO> dentist = dentistVisitService.getDentistByName(visit.get().getDentistName());
         if (!dentist.isPresent()) return "redirect:/search";
 
-        List<DentistDTO> allDentists = dentistVisitService.getAllDentists();
-        List<DentistDTO> otherDentists = allDentists.stream()
-                .filter(x -> !x.getName().equals(visit.get().getDentistName()))
-                .collect(Collectors.toList());
+        List<DentistDTO> dentists = dentistVisitService.getAllDentists();
 
-        model.addAttribute("dentists", otherDentists);
+        model.addAttribute("dentists", dentists);
         model.addAttribute("visit", visit.get());
 
         return "details";
@@ -75,50 +77,44 @@ public class DentistAppController extends WebMvcConfigurerAdapter {
     @PostMapping("/details")
     public String updateForm(DentistVisitDTO dentistVisitDTO, BindingResult bindingResult) {
         if (bindingResult.hasErrors() || dentistVisitDTO == null) {
-            return "update";
+            return "search";
         }
 
-        dentistVisitService.changeDentistVisit(dentistVisitDTO);
+        Long id = dentistVisitDTO.getId();
+        Date date = dentistVisitDTO.getVisitDate();
+        String name = dentistVisitDTO.getDentistName();
+        String time = dentistVisitDTO.getVisitTime();
 
-        return "redirect:/details/" + dentistVisitDTO.getId();
+        if (id == null || date == null || name == null || time == null) return "search";
+
+        dentistVisitService.updateDentistVisit(dentistVisitDTO);
+
+        return "redirect/updated";
     }
 
-//    @PostMapping("/update/visit/{id}")
-//    public String updateVisitForm(@PathVariable Long id, @ModelAttribute DentistVisitDTO dentistVisitDTO) {
-//        if (id == null || dentistVisitDTO == null) return "form";
-//        dentistVisitService.changeDentistVisit(id, dentistVisitDTO);
-//        return "redirect:/search";
-//    }
-
     @GetMapping("/search")
-    public String getRegistrations(DentistVisitDTO dentistVisitDTO, Model model) {
-        model.addAttribute("allRegistrations", dentistVisitService.getAllDentistVisits());
-
+    public String getVisits(DentistVisitDTO dentistVisitDTO, Model model) {
         return "search";
     }
 
     @PostMapping("/search")
-    public String searchRegistrations(DentistVisitDTO dentistVisitDTO, Model model, BindingResult bindingResult) {
+    public String searchVisits(DentistVisitDTO dentistVisitDTO, Model model, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return "search";
         }
 
-        String registrations = "allRegistrations";
+        List<DentistVisitDTO> registrations = new ArrayList<>();
         String name = dentistVisitDTO.getDentistName();
         Date visitDate = dentistVisitDTO.getVisitDate();
 
-        if (!name.equals("default") && visitDate != null) {
-            model.addAttribute(registrations, dentistVisitService.getAllVisitsByDentistNameOnSpecificDate(name, visitDate));
+        if (name != null) {
+            if (name.equals("all")) registrations = dentistVisitService.getAllDentistVisits();
+            else registrations = dentistVisitService.getAllVisitsByDentistName(name);
         }
-        else if (!name.equals("default")) {
-            model.addAttribute(registrations, dentistVisitService.getAllVisitsByDentistName(name));
-        }
-        else if (visitDate != null) {
-            model.addAttribute(registrations, dentistVisitService.getAllVisitsOnSpecificDate(visitDate));
-        }
-        else {
-            model.addAttribute(registrations, dentistVisitService.getAllDentistVisits());
-        }
+
+        if (visitDate != null) registrations = dentistVisitService.filterVisitsBySpecificDate(registrations, visitDate);
+
+        if (!registrations.isEmpty()) model.addAttribute("registrations", registrations);
 
         return "search";
     }
@@ -137,7 +133,6 @@ public class DentistAppController extends WebMvcConfigurerAdapter {
         if (dentistDTO.getName() == null || dentistDTO.getName().isEmpty()) return "dentist";
 
         dentistVisitService.addNewDentist(dentistDTO.getName());
-        // TODO REDIRECT SUCCESS
         return "redirect:/registered";
     }
 
@@ -153,11 +148,20 @@ public class DentistAppController extends WebMvcConfigurerAdapter {
             return "visit";
         }
 
-        if (dentistVisitDTO.getVisitDate() == null || dentistVisitDTO.getDentistName() == null || dentistVisitDTO.getVisitTime() == null) return "register";
+        Date date = dentistVisitDTO.getVisitDate();
+        String name = dentistVisitDTO.getDentistName();
+        String time = dentistVisitDTO.getVisitTime();
 
-        dentistVisitService.addVisit(dentistVisitDTO.getDentistName(), dentistVisitDTO.getVisitDate(), dentistVisitDTO.getVisitTime());
-        // TODO REDIRECT SUCCESS
-        return "redirect:/results";
+        if (date == null || name == null || time == null || time.isEmpty()) return "visit";
+
+        if (dentistVisitService.freeAtSpecificDateTime(name, date, time)) {
+            dentistVisitService.addVisit(name, date, time);
+            return "redirect:/registered";
+        } else {
+            bindingResult.rejectValue("visitTime", "NotAvailable.dentistVisitDTO.visitTime");
+            // add error
+            return "visit";
+        }
     }
 
 }
