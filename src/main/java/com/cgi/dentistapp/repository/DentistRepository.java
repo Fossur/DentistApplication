@@ -13,6 +13,4 @@ public interface DentistRepository extends JpaRepository<DentistEntity, Long> {
 
     Optional<DentistEntity> findByDentistName(String dentistName);
 
-    Optional<DentistEntity> findById(long id);
-
 }

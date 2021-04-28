@@ -1,5 +1,6 @@
 package com.cgi.dentistapp.entity;
 
+
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;

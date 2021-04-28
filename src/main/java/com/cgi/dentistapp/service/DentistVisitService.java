@@ -74,7 +74,6 @@ public class DentistVisitService {
                 Optional<DentistEntity> dentist = dentistRepo.findByDentistName(dentistName);
                 dentist.ifPresent(entity::setDentist);
 
-
                 // set new end time depending on dentist session length
                 LocalTime endTime = LocalTime.parse(entity.getVisitStartTime());
                 endTime = endTime.plusMinutes(entity.getDentist().getSessionLength());
