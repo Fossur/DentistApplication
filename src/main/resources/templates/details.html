@@ -71,7 +71,7 @@
                 <div class="container h-100 p-2">
                     <div class="row justify-content-center text-center">
                         <h4 class="text-info">Valitud visiit</h4>
-                        <form action="#" th:action="@{/details}" th:object="${visit}" method="post" class="col-12">
+                        <form action="#" th:action="@{/details}" th:object="${dentistVisitDTO}" method="post" class="col-12">
                             <input type="hidden" id="name" th:field="*{id}"/>
                             <div class="form-group mt-3">
                                 <label for="dentistName" th:text="#{dentist.name}"></label>
@@ -84,20 +84,33 @@
                                 <a th:if="${#fields.hasErrors('dentistName')}" th:errors="*{dentistName}">name.error</a>
                             </div>
                             <div class="form-group mt-3">
-                                <label for="visitDate" th:text="#{visit.date}"></label>
-                                <input id="visitDate" type="date" class="form-control" th:field="*{visitDate}"/>
-                                <a th:if="${#fields.hasErrors('visitDate')}" th:errors="*{visitDate}">time.error</a>
+                                <label for="visitorName" th:text="#{visitor}"></label>
+                                <input id="visitorName" th:placeholder="#{visitor.name}" type="text" class="form-control" th:field="*{visitorName}"/>
+                                <a class="text-danger"  th:if="${#fields.hasErrors('visitorName')}" th:errors="*{visitorName}">name.error</a>
+                            </div>
+                            <div>
+                                <input th:placeholder="#{visitor.email}" type="text" class="form-control" th:field="*{visitorEmail}"/>
+                                <a class="text-danger"  th:if="${#fields.hasErrors('visitorEmail')}" th:errors="*{visitorEmail}">email.error</a>
                             </div>
                             <div class="form-group mt-3">
-                                <label for="visitTime" th:text="#{visit.time}"></label>
-                                <input type="time" class="form-control" id="visitTime" th:field="*{visitTime}"/>
-                                <a th:class="error" th:if="${#fields.hasErrors('visitTime')}" th:errors="*{visitTime}">time.error</a>
+                                <label for="visitDate" th:text="#{visit.date}"></label>
+                                <input id="visitDate" type="date" class="form-control" th:field="*{visitDate}"/>
+                                <a class="text-danger" th:if="${#fields.hasErrors('visitDate')}" th:errors="*{visitDate}">date.error</a>
+                            </div>
+                            <div class="form-group mt-3">
+                                <label for="visitStartTime" th:text="#{visit.time}"></label>
+                                <input type="time" class="form-control" id="visitStartTime" th:field="*{visitStartTime}"/>
+                                <a class="text-danger" th:if="${#fields.hasErrors('visitStartTime')}" th:errors="*{visitStartTime}">time.error</a>
+                            </div>
+                            <div class="form-group mt-3">
+                                <label for="visitEndTime" th:text="#{visit.end.time}"></label>
+                                <a class="form-control text-left" id="visitEndTime" th:field="*{visitStartTime}" th:text="*{visitEndTime}"/>
                             </div>
                             <div class="form-group mt-5 text-center">
-                                <button class="btn btn-info " type="submit">Tühista</button>
-                                <form action="#" th:action="@{/delete/{id}(id=${visit.id})}" method="post">
-                                    <button type="submit" class="btn btn-danger" onClick="return confirm('Kas sa oled kindel, et tahad seda registreeringut kustutada?')">Kustuta</button>
-                                </form>
+                                <button class="btn btn-info " type="submit" th:text="#{change.button}"></button>
+<!--                                <form action="#" th:action="@{/delete/{id}(id=${id})}" method="post">-->
+<!--                                    <button type="submit" class="btn btn-danger" th:text="#{delete.button}" onClick="return confirm('Kas sa oled kindel, et tahad seda registreeringut kustutada?')"></button>-->
+<!--                                </form>-->
                             </div>
                         </form>
                     </div>

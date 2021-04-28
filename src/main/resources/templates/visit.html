@@ -73,44 +73,42 @@
                 <div class="container h-100 p-2">
                     <div class="row justify-content-center text-center">
                         <h4 class="text-info">Registreeri visiit hambaarstile</h4>
-                            <form action="#" th:action="@{/visit}" th:object="${dentistVisitDTO}" method="post" class="col-12 border">
-                                <div class="form-group mt-3 mb-0">
-                                    <label for="dentistName" th:text="#{dentist.name}"></label>
-                                    <select id="dentistName" class="form-control" th:field="*{dentistName}">
-                                        <option th:each="dentist : ${dentists}"
-                                                th:value="${dentist.name}"
-                                                th:text="${dentist.name}">
-                                        </option>
-                                    </select>
-                                    <a class="text-danger" th:if="${#fields.hasErrors('dentistName')}" th:errors="*{dentistName}">name.error</a>
-                                </div>
-                                <div class="form-group mt-3">
-                                    <label for="visitDate" th:text="#{visit.date}"></label>
-                                    <input id="visitDate" type="date" class="form-control" th:field="*{visitDate}"/>
-                                    <a class="text-danger" th:if="${#fields.hasErrors('visitDate')}" th:errors="*{visitDate}">date.error</a>
-                                </div>
-                                <div class="form-group mt-3">
-                                    <label for="visitTime" th:text="#{visit.time}"></label>
-                                    <input type="time" class="form-control" id="visitTime" th:field="*{visitTime}"/>
-                                    <a class="text-danger" th:if="${#fields.hasErrors('visitTime')}" th:errors="*{visitTime}">time.error</a>
-                                </div>
-                                <div class="form-group mt-5 text-center">
-                                    <button class="btn btn-info" th:text="#{register.visit}" type="submit"></button>
-                                    <button class="btn btn-danger" type="submit">Tühista</button>
-                                </div>
-                            </form>
+                        <form action="#" th:action="@{/visit}" th:object="${dentistVisitDTO}" method="post" class="col-12 border">
+                            <div class="form-group mt-3 mb-0">
+                                <label for="dentistName" th:text="#{dentist.name}"></label>
+                                <select id="dentistName" class="form-control" th:field="*{dentistName}">
+                                    <option th:each="dentist : ${dentists}"
+                                            th:value="${dentist.name}"
+                                            th:text="${dentist.name}">
+                                    </option>
+                                </select>
+                                <a class="text-danger" th:if="${#fields.hasErrors('dentistName')}" th:errors="*{dentistName}">name.error</a>
+                            </div>
+                            <div class="form-group mt-3">
+                                <label for="visitorName" th:text="#{visitor}"></label>
+                                <input id="visitorName" th:placeholder="#{visitor.name}" type="text" class="form-control" th:field="*{visitorName}"/>
+                                <a class="text-danger"  th:if="${#fields.hasErrors('visitorName')}" th:errors="*{visitorName}">name.error</a>
+                            </div>
+                            <div>
+                                <input th:placeholder="#{visitor.email}" type="text" class="form-control" th:field="*{visitorEmail}"/>
+                                <a class="text-danger"  th:if="${#fields.hasErrors('visitorEmail')}" th:errors="*{visitorEmail}">email.error</a>
+                            </div>
+                            <div class="form-group mt-3">
+                                <label for="visitDate" th:text="#{visit.date}"></label>
+                                <input id="visitDate" type="date" class="form-control" th:field="*{visitDate}"/>
+                                <a class="text-danger" th:if="${#fields.hasErrors('visitDate')}" th:errors="*{visitDate}">date.error</a>
+                            </div>
+                            <div class="form-group mt-3">
+                                <label for="visitTime" th:text="#{visit.time}"></label>
+                                <input type="time" class="form-control" id="visitTime" th:field="*{visitStartTime}"/>
+                                <a class="text-danger" th:if="${#fields.hasErrors('visitStartTime')}" th:errors="*{visitStartTime}">time.error</a>
+                            </div>
+                            <div class="form-group mt-5 text-center">
+                                <button class="btn btn-info" th:text="#{register.button}" type="submit"></button>
+                                <button class="btn btn-danger" th:text="#{change.button}" type="submit"></button>
+                            </div>
+                        </form>
                     </div>
-<!--                    <div class="row justify-content-center mt-2">-->
-<!--&lt;!&ndash;                        <div class="col-sm-12" th:if="${#fields.hasErrors('dentistName')}" th:errors="*{dentistName}">&ndash;&gt;-->
-<!--&lt;!&ndash;                            <div class="alert alert-danger text-center py-1 mb-0 mt-1">name.error</div>&ndash;&gt;-->
-<!--&lt;!&ndash;                        </div>&ndash;&gt;-->
-<!--                        <div class="col-sm-12">-->
-<!--                            <div class="alert alert-danger text-center py-1 mb-0 mt-1"> Palun vali kuupäev.</div>-->
-<!--                        </div>-->
-<!--                        <div class="col-sm-12">-->
-<!--                            <div class="alert alert-danger text-center py-1 mb-0 mt-1"> Palun vali kellaaeg.</div>-->
-<!--                        </div>-->
-<!--                    </div>-->
                 </div>
             </div>
         </div>
@@ -120,11 +118,10 @@
         <p class="text-muted text-center">Made by Karl-Erik Hein</p>
     </footer>
 
-
-<!-- Option 1: jQuery and Bootstrap Bundle (includes Popper) -->
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-Piv4xVNRyMGpqkS2by6br4gNJ7DXjqk09RmUpJ8jgGtD7zP9yug3goQfGII0yAns" crossorigin="anonymous"></script>
-<script src="https://kit.fontawesome.com/94e5971115.js" crossorigin="anonymous"></script>
+    <!-- Option 1: jQuery and Bootstrap Bundle (includes Popper) -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-Piv4xVNRyMGpqkS2by6br4gNJ7DXjqk09RmUpJ8jgGtD7zP9yug3goQfGII0yAns" crossorigin="anonymous"></script>
+    <script src="https://kit.fontawesome.com/94e5971115.js" crossorigin="anonymous"></script>
 
 </body>
 </html>

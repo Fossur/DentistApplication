@@ -74,8 +74,8 @@
                         <h4 class="text-info">Otsi visiiti</h4>
                             <form id="searchForm" action="#" th:action="@{/search}" th:object="${dentistVisitDTO}" method="POST" class="col-12 border">
                                 <div class="form-group mt-3 mb-0">
-                                    <label class="form-label" for="dentistName" th:text="#{dentist.name}"></label>
-                                    <select class="form-control" id="dentistName" th:field="*{dentistName}">
+                                    <label class="form-label" for="dentist" th:text="#{dentist.name}"></label>
+                                    <select class="form-control" id="dentist" th:field="*{dentistName}">
                                         <option th:value="all" th:text="Kõik"></option>
                                         <option th:each="dentist : ${dentists}"
                                                 th:value="${dentist.name}"
@@ -84,8 +84,8 @@
                                     </select>
                                 </div>
                                 <div class="form-group mt-3">
-                                    <label for="visitDate" th:text="#{visit.date}"></label>
-                                    <input type="date" class="form-control"  id="visitDate" th:field="*{visitDate}"/>
+                                    <label for="regDate" th:text="#{visit.date}"></label>
+                                    <input type="date" class="form-control"  id="regDate" th:field="*{visitDate}"/>
                                 </div>
                                 <div class="form-group mt-5 text-center">
                                     <button class="btn btn-info " th:text="#{search.visit}" type="submit">Otsi</button>
@@ -112,11 +112,21 @@
                     <tr th:each="registration : ${registrations}" th:object="${registration}">
                         <td th:text="${registration.dentistName}"></td>
                         <td th:text="${#dates.format(registration.visitDate, 'dd/MM/yyyy')}"></td>
-                        <td th:text="${registration.visitTime}"></td>
+                        <td th:text="${registration.visitStartTime}"></td>
                         <td class="row">
-                            <a th:href="@{/details/{id}(id=${registration.id})}">
-                                <i class="button fa fa-edit fa-lg mr-3 text-info" ></i>
-                            </a>
+                            <form action="#" th:action="@{/details}" th:object="${registration}" method="GET">
+                                <input type="hidden" id="id" name="id" th:value="*{id}"/>
+                                <input type="hidden" id="dentistName" name="dentistName" th:value="*{dentistName}"/>
+                                <input type="hidden" id="visitDate" name="visitDate" th:value="*{visitDate}"/>
+                                <input type="hidden" id="visitorName" name="visitorName" th:value="*{visitorName}"/>
+                                <input type="hidden" id="visitorEmail" name="visitorEmail" th:value="*{visitorEmail}"/>
+                                <input type="hidden" id="visitStartTime" name="visitStartTime" th:value="*{visitStartTime}"/>
+                                <input type="hidden" id="visitEndTime" name="visitEndTime" th:value="*{visitEndTime}"/>
+                                <button type="submit" class="fa fa-edit fa-lg mr-3 text-info p-0 m-0 border-0"></button>
+                            </form>
+<!--                            <a th:href="@{/details/{id}(id=${registration.id})}">-->
+<!--                                <i class="button fa fa-edit fa-lg mr-3 text-info" ></i>-->
+<!--                            </a>-->
                             <form action="#" th:action="@{/delete/{id}(id=${registration.id})}" method="post">
                                 <button type="submit" class="fa fa-trash fa-lg mr-3 text-danger p-0 m-0 border-0" onClick="return confirm('Kas sa oled kindel, et tahad seda registreeringut kustutada?')"></button>
                             </form>

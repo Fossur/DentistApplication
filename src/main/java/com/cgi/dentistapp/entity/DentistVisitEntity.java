@@ -3,18 +3,21 @@ package com.cgi.dentistapp.entity;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import org.hibernate.validator.constraints.Email;
+import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.Date;
 
 
 @Entity
-@Table(name = "dentist_visit")
 @Getter
 @Setter
 @RequiredArgsConstructor
+@Table(name = "dentist_visit")
 public class DentistVisitEntity{
 
     @Id
@@ -30,6 +33,19 @@ public class DentistVisitEntity{
     private Date visitDate;
 
     @NotNull
-    private String visitTime;
+    @NotEmpty
+    private String visitStartTime;
+
+    @NotNull
+    @NotEmpty
+    private String visitEndTime;
+
+    @NotEmpty
+    @Size(min = 1, max = 50)
+    private String visitorName;
+
+    @Email
+    @NotNull
+    private String visitorEmail;
 
 }
