@@ -29,13 +29,6 @@ public class DentistAppController extends WebMvcConfigurerAdapter {
 
     private final DentistVisitService dentistVisitService;
 
-
-    @Override
-    public void addViewControllers(ViewControllerRegistry registry) {
-        registry.addViewController("/registered").setViewName("registered");
-        registry.addViewController("/updated").setViewName("updated");
-    }
-
     @GetMapping
     public String showMain() {
         return "main";
@@ -121,10 +114,10 @@ public class DentistAppController extends WebMvcConfigurerAdapter {
             return "dentist";
         }
 
-        if (dentistDTO.getName() == null || dentistDTO.getName().isEmpty()) return "dentist";
+        if (dentistVisitService.validateDentistInfo(dentistDTO)) return "dentist";
 
-        dentistVisitService.addNewDentist(dentistDTO.getName());
-        return "redirect:/registered";
+        dentistVisitService.addNewDentist(dentistDTO);
+        return "registered";
     }
 
 
@@ -147,7 +140,7 @@ public class DentistAppController extends WebMvcConfigurerAdapter {
 
         if (dentistVisitService.freeAtSpecificDateTime(name, date, time)) {
             dentistVisitService.addVisit(dentistVisitDTO);
-            return "redirect:/registered";
+            return "registered";
         }
         
         // add error

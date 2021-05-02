@@ -28,9 +28,10 @@ public class DentistVisitService {
 
     private final DentistVisitRepository dentistVisitRepo;
 
-    public void addNewDentist(String name) {
+    public void addNewDentist(DentistDTO dto) {
         DentistEntity dentistEntity = new DentistEntity();
-        dentistEntity.setDentistName(name);
+        dentistEntity.setDentistName(dto.getName());
+        if (dto.getSessionLength() != null) dentistEntity.setSessionLength(dto.getSessionLength());
         dentistRepo.save(dentistEntity);
     }
 
@@ -112,6 +113,10 @@ public class DentistVisitService {
         boolean sameTime = dto.getVisitStartTime().equals(oldVisit.getVisitStartTime());
         boolean sameDentist = dto.getDentistName().equals(oldVisit.getDentist().getDentistName());
         return sameDate && sameTime && sameDentist;
+    }
+
+    public boolean validateDentistInfo(DentistDTO dto) {
+        return dto.getName() != null && !dto.getName().isEmpty();
     }
 
     public boolean validateVisitInfo(DentistVisitDTO dto) {
